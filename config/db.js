@@ -5,10 +5,7 @@ let db, bucket;
 
 const connectDB = async () => {
   try {
-    const client = await MongoClient.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    const client = await MongoClient.connect(uri);
 
     db = client.db("AmanComputer");
     bucket = new GridFSBucket(db, { bucketName: "uploads" });
