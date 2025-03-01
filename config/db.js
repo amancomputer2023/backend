@@ -1,18 +1,34 @@
-const { MongoClient } = require("mongodb");
+const { MongoClient, GridFSBucket } = require("mongodb");
 
-const uri = "mongodb+srv://amancomputer005:AmanComputer2023@cluster0.9oehq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const client = new MongoClient(uri);
+const uri = "mongodb://localhost:27017/";
+let db, bucket;
 
 const connectDB = async () => {
-    try {
-        await client.connect();
-        console.log("MongoDB Connected...");
-    } catch (err) {
-        console.error(err.message);
-        process.exit(1);
-    }
+  try {
+    const client = await MongoClient.connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    db = client.db("AmanComputer");
+    bucket = new GridFSBucket(db, { bucketName: "uploads" });
+
+    console.log("MongoDB Connected...");
+  } catch (err) {
+    console.error("MongoDB Connection Error:", err.message);
+    process.exit(1);
+  }
 };
 
-const getDB = () => client.db("AmanComputer");
+// Export a function to get `db` and `bucket` safely after initialization
+const getDB = () => {
+  if (!db) throw new Error("Database not initialized. Call connectDB() first.");
+  return db;
+};
 
-module.exports = { connectDB, getDB };
+const getBucket = () => {
+  if (!bucket) throw new Error("GridFSBucket not initialized. Call connectDB() first.");
+  return bucket;
+};
+
+module.exports = { connectDB, getDB, getBucket };
