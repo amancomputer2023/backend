@@ -1,6 +1,6 @@
 const { MongoClient, GridFSBucket } = require("mongodb");
 
-const uri = "mongodb://localhost:27017/";
+const uri = "mongodb+srv://amancomputer005:AmanComputer2023@cluster0.9oehq.mongodb.net/";
 let db, bucket;
 
 const connectDB = async () => {
