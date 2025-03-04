@@ -1,38 +1,57 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const { connectDB } = require("./config/db");
+const { connectDB, getBucket } = require("./config/db");
 const apiRoutes = require("./routes/apiRoutes");
-const path = require("path");
 
 const app = express();
 const port = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json()); // Parse JSON request body
-connectDB();
 
-app.use("/api", apiRoutes); 
+// Ensure the database connection is established before starting the server
+connectDB().then(() => {
+  console.log("Database connected.");
 
-app.get("/images/:name", (req, res) => {
-  const imageName = req.params.name;
-  const imagePath = path.join(__dirname, "images", imageName);
+  app.use("/api", apiRoutes);
 
-  res.sendFile(imagePath, (err) => {
-    if (err) {
-      res.status(404).send("Image not found");
+  // Route to serve images from GridFS
+  app.get("/images/:filename", async (req, res) => {
+    try {
+      const bucket = getBucket();
+      const files = await bucket.find({ filename: req.params.filename }).toArray();
+
+      if (!files || files.length === 0) {
+        return res.status(404).json({ error: "File not found." });
+      }
+
+      const downloadStream = bucket.openDownloadStreamByName(req.params.filename);
+      res.setHeader("Content-Type", "image/*");
+      downloadStream.pipe(res);
+    } catch (error) {
+      console.error("Error fetching image:", error);
+      res.status(500).json({ error: "Internal server error" });
     }
   });
-});
 
-app.use((err, req, res, next) => {
-  res.status(err.status || 500).send({ error: err.message });
-});
+  // Global error handler
+  app.use((err, req, res, next) => {
+    console.error("Error:", err);
+    res.status(err.status || 500).json({ error: err.message });
+  });
 
-app.use((req, res) => {
-  res.status(404).send({ error: "Sorry, can't find that" });
-});
+  // 404 handler for unknown routes
+  app.use((req, res) => {
+    res.status(404).json({ error: "Sorry, can't find that" });
+  });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  // Start the server after DB connection
+  app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+  });
+
+}).catch((err) => {
+  console.error("Failed to connect to database:", err);
+  process.exit(1);
 });
