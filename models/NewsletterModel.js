@@ -5,9 +5,9 @@ const findNewsLetterSubscriber = async(email) => {
     return await db.collection("newsletter").findOne({email});
 }
 
-const insertNewsLetterSubscriber = async () => {
+const insertNewsLetterSubscriber = async (subscriber) => {
     const db = getDB();
-    return await db.collection("newsletter").insertOne(service);
+    return await db.collection("newsletter").insertOne(subscriber);
 };
 
 module.exports = { insertNewsLetterSubscriber, findNewsLetterSubscriber };

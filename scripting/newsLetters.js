@@ -12,7 +12,7 @@ const newsLetters = async (req, res) => {
         return res.status(409).json({ message: "Email already subscribed" });
       }
 
-      await insertNewsLetterSubscriber(email);
+      await insertNewsLetterSubscriber({email, createdAt: new Date(),});
 
       res.status(201).json({ message: "Subscription successful!" });
     } catch (error) {
