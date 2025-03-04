@@ -1,13 +1,13 @@
 const { addMessage, getAllMessages } = require('../models/messageModel');
 async function insertMessage(req, res) {
     try {
-        const { name, email, message } = req.body;
+        const { name, contact, message } = req.body;
         
-        if (!name || !email || !message ) {
+        if (!name || !contact || !message ) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        await addMessage({ name, email, message, createdAt: new Date() });
+        await addMessage({ name, contact, message, createdAt: new Date() });
         res.status(201).json({ message: "Service added successfully" });
     } catch (err) {
         res.status(500).json({ error: err.message });
