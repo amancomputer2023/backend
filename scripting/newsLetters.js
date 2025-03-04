@@ -7,7 +7,7 @@ const newsLetters = async (req, res) => {
     }
 
     try {
-      const existingSubscriber = await findNewsLetterSubscriber({ email });
+      const existingSubscriber = await findNewsLetterSubscriber(email);
       if (existingSubscriber) {
         return res.status(409).json({ message: "Email already subscribed" });
       }
