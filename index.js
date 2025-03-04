@@ -1,14 +1,13 @@
-require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const { connectDB, getBucket } = require("./config/db");
 const apiRoutes = require("./routes/apiRoutes");
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = 3001;
 
 app.use(cors());
-app.use(express.json()); // Parse JSON request body
+app.use(express.json()); // Parse JSON request bod
 
 // Ensure the database connection is established before starting the server
 connectDB().then(() => {
