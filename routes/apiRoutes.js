@@ -7,6 +7,7 @@ const multer = require("multer");
 const path = require("path");
 const { imageUpload } = require("../scripting/imageUpload");
 const { newsLetters } = require("../scripting/newsLetters");
+const { insertMessage, findAllMessages } = require("../scripting/message");
 
 const router = express.Router();
 router.use(validateApiKey);
@@ -21,6 +22,7 @@ router.route("/services").get(findServices).post(insertService);
 router.route("/product").get(findAllProduct).post(insertProduct);
 router.route("/featured").get(findFeaturedProduct);
 router.route("/newsletter").post(newsLetters);
+router.route("/message").post(insertMessage).get(findAllMessages)
 
 router.post("/upload", upload.single("image"), imageUpload);
 
