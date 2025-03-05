@@ -3,28 +3,39 @@ const { validateApiKey } = require("../middleware/authMiddleware");
 const { register, login, admin, updateUserDetail } = require("../scripting/user");
 const { insertService, findServices } = require("../scripting/services");
 const { findAllProduct, insertProduct, findFeaturedProduct } = require("../scripting/product");
-const multer = require("multer");
-const path = require("path");
 const { imageUpload } = require("../scripting/imageUpload");
 const { newsLetters } = require("../scripting/newsLetters");
 const { insertMessage, findAllMessages } = require("../scripting/message");
+const multer = require("multer");
 
 const router = express.Router();
-router.use(validateApiKey);
 
+// ✅ Apply API Key Validation Only to Specific Routes
+const protectedRoutes = ["/services", "/product", "/featured", "/newsletter", "/message", "/upload", "/updateUser"];
+protectedRoutes.forEach(route => router.use(route, validateApiKey));
+
+// ✅ Set Up Multer Storage with File Validation
 const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const upload = multer({ storage, fileFilter:"image/*" });
 
-router.route("/register").post(register);
-router.route("/login").post(login);
-router.route("/admin").get(admin);
+// ✅ User Routes
+router.post("/register", register);
+router.post("/login", login);
+router.get("/admin", admin);
+router.put("/updateUser", updateUserDetail); // 🔄 Changed POST to PUT
+
+// ✅ Services Routes
 router.route("/services").get(findServices).post(insertService);
-router.route("/product").get(findAllProduct).post(insertProduct);
-router.route("/featured").get(findFeaturedProduct);
-router.route("/newsletter").post(newsLetters);
-router.route("/message").post(insertMessage).get(findAllMessages);
-router.route("/updateUser").post(updateUserDetail)
 
+// ✅ Product Routes
+router.route("/product").get(findAllProduct).post(insertProduct);
+router.get("/featured", findFeaturedProduct);
+
+// ✅ Messages & Newsletters
+router.post("/newsletter", newsLetters);
+router.route("/message").post(insertMessage).get(findAllMessages);
+
+// ✅ Image Upload
 router.post("/upload", upload.single("image"), imageUpload);
 
 module.exports = router;
