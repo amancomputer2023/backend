@@ -43,8 +43,7 @@ async function login(req, res) {
     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
     const token = jwt.sign(
-      { userId: user._id, role: user.role },
-      "Gajraj@0905",
+      { userId: user._id, role: user.role },password,
       { expiresIn: "1h" }
     );
 
@@ -60,7 +59,7 @@ async function admin(req, res) {
     const token = req.headers.authorization?.split(" ")[1]; // Extract Bearer token
     if (!token) return res.status(401).json({ message: "Unauthorized" });
 
-    const decoded = jwt.verify(token, "Gajraj@0905");
+    const decoded = jwt.verify(token, "Aman@0505");
     if (decoded.role !== "admin") return res.status(403).json({ message: "Access Denied" });
 
     res.json({ message: "Welcome to Admin Panel" });
