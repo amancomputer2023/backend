@@ -1,6 +1,6 @@
 const express = require("express");
 const { validateApiKey } = require("../middleware/authMiddleware");
-const { register, login, admin } = require("../scripting/user");
+const { register, login, admin, updateUserDetail } = require("../scripting/user");
 const { insertService, findServices } = require("../scripting/services");
 const { findAllProduct, insertProduct, findFeaturedProduct } = require("../scripting/product");
 const multer = require("multer");
@@ -22,7 +22,8 @@ router.route("/services").get(findServices).post(insertService);
 router.route("/product").get(findAllProduct).post(insertProduct);
 router.route("/featured").get(findFeaturedProduct);
 router.route("/newsletter").post(newsLetters);
-router.route("/message").post(insertMessage).get(findAllMessages)
+router.route("/message").post(insertMessage).get(findAllMessages);
+router.route("/updateUser").post(updateUserDetail)
 
 router.post("/upload", upload.single("image"), imageUpload);
 

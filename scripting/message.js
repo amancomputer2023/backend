@@ -24,3 +24,4 @@ async function findAllMessages(req, res) {
 };
 
 module.exports = { insertMessage, findAllMessages } ;
+    

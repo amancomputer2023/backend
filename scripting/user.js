@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { findUserByEmail, createUser } = require("../models/userModel");
+const { findUserByEmail, createUser, updateUser } = require("../models/userModel");
 const { hashPassword, verifyPassword } = require("./hashing");
 
 async function register(req, res) {
@@ -71,4 +71,27 @@ async function admin(req, res) {
   }
 }
 
-module.exports = { register, login, admin };
+async function updateUserDetail(req, res) {
+  try {
+    const { _id, username, email, password, firstName, lastName, phoneNumber, profilePictureUrl } =
+      req.body;
+    const hashedPassword = await hashPassword(password);
+    await updateUser(_id, {
+      username,
+      email,
+      password: hashedPassword,
+      firstName,
+      lastName,
+      phoneNumber,
+      profilePictureUrl,
+      updatedAt: new Date(),
+      isActive: true,
+      isVerified: true,
+    });
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+module.exports = { register, login, admin, updateUserDetail };
