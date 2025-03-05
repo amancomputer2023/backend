@@ -16,7 +16,7 @@ protectedRoutes.forEach(route => router.use(route, validateApiKey));
 
 // ✅ Set Up Multer Storage with File Validation
 const storage = multer.memoryStorage();
-const upload = multer({ storage, fileFilter:"image/*" });
+const upload = multer({ storage });
 
 // ✅ User Routes
 router.post("/register", register);
