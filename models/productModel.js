@@ -1,8 +1,8 @@
 const { getDB } = require("../config/db");
 
-const addProduct = async (service) => {
+const addProduct = async (product) => {
     const db = getDB();
-    return await db.collection("product").insertOne(service);
+    return await db.collection("product").insertOne(product);
 };
 
 const getAllProduct = async () => {
