@@ -71,12 +71,8 @@ async function admin(req, res) {
 
 async function updateUserDetail(req, res) {
   try {
-    const { _id, username, email, password, firstName, lastName, phoneNumber, profilePictureUrl } = req.body;
+    const { _id, username, email, firstName, lastName, phoneNumber, profilePictureUrl } = req.body;
     const updatedData = { username, email, firstName, lastName, phoneNumber, profilePictureUrl, updatedAt: new Date() };
-
-    if (password) {
-      updatedData.password = await hashPassword(password);
-    }
 
     await updateUser(_id, updatedData);
     res.status(200).json({ message: "User updated successfully" });
