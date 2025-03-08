@@ -1,8 +1,8 @@
 const { getDB } = require("../config/db");
 
-const getAllFeedback = async() => {
+const getAllFeedback = async(limit = 4) => {
     const db = getDB();
-    return await db.collection("feedback").find({}).toArray();
+    return await db.collection("feedback").find({}).sort({ createdAt: -1 }).limit(limit).toArray();
 }
 
 const addfeedback = async (feedback) => {
