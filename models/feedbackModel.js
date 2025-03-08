@@ -2,7 +2,7 @@ const { getDB } = require("../config/db");
 
 const getAllFeedback = async() => {
     const db = getDB();
-    return await db.collection("feedback").find({});
+    return await db.collection("feedback").find({}).toArray();
 }
 
 const addfeedback = async (feedback) => {
