@@ -6,6 +6,7 @@ const { findAllProduct, insertProduct, findFeaturedProduct } = require("../scrip
 const { imageUpload } = require("../scripting/imageUpload");
 const { newsLetters } = require("../scripting/newsLetters");
 const { insertMessage, findAllMessages } = require("../scripting/message");
+const { insertfeedback, findAllFeedback } = require("../scripting/feedback");
 const multer = require("multer");
 
 const router = express.Router();
@@ -34,6 +35,7 @@ router.get("/featured", findFeaturedProduct);
 // ✅ Messages & Newsletters
 router.post("/newsletter", newsLetters);
 router.route("/message").post(insertMessage).get(findAllMessages);
+router.route("/feedback").post(insertfeedback).get(findAllFeedback);
 
 // ✅ Image Upload
 router.post("/upload", upload.single("image"), imageUpload);
