@@ -8,7 +8,7 @@ const { newsLetters } = require("../scripting/newsLetters");
 const { insertMessage, findAllMessages } = require("../scripting/message");
 const { insertfeedback, findAllFeedback } = require("../scripting/feedback");
 const multer = require("multer");
-const { FindToCart, InsertToCart, RemoveToCart, UpdateToCart } = require("../scripting/addToCart");
+const { addToCart, getCart, removeFromCart, updateCart } = require("../scripting/addToCart");
 
 const router = express.Router();
 
@@ -37,7 +37,7 @@ router.get("/featured", findFeaturedProduct);
 router.post("/newsletter", newsLetters);
 router.route("/message").post(insertMessage).get(findAllMessages);
 router.route("/feedback").post(insertfeedback).get(findAllFeedback);
-router.route("/cart").post(InsertToCart).get(FindToCart).delete(RemoveToCart).put(UpdateToCart);
+router.route("/cart").post(addToCart).get(getCart).delete(removeFromCart).put(updateCart);
 
 // ✅ Image Upload
 router.post("/upload", upload.single("image"), imageUpload);

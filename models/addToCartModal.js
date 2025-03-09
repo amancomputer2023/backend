@@ -1,8 +1,8 @@
 const { getDB } = require("../config/db");
 
-const Cart = async()=>{
+async function getCartCollection() {
     const db = getDB();
-    return await db.collection("cart");
+    return db.collection("cart"); // Returns the cart collection
 }
 
-module.exports = { Cart };
+module.exports = { getCartCollection };
